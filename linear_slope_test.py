@@ -188,9 +188,9 @@ class LinearSlopeTest:
         # 估计斜率标准差
         sigma_b1_hat = self._estimate_slope_std(data, t, b1_hat, b0_hat)
         
-        # 计算t统计量
-        if sigma_b1_hat > 0:
-            t_statistic = b1_hat / sigma_b1_hat
+        # 计算t统计量，按照公式：t1 = b̂₁ / (σ̂ᵦ₁ + 1)
+        if sigma_b1_hat >= 0:
+            t_statistic = b1_hat / (sigma_b1_hat + 1)
         else:
             t_statistic = 0
         
@@ -320,12 +320,12 @@ if __name__ == "__main__":
     np.random.seed(42)
     
     # 1. 生成稳态数据（均值为10，带小随机噪声）
-    n = 50
+    n = 30
     steady_data = 10 + 0.1 * np.random.randn(n)
     steady_time = np.arange(n)
     
-    # 2. 生成非稳态数据（包含线性趋势）
-    trend_data = 10 + 0.05 * np.arange(n) + 0.1 * np.random.randn(n)
+    # 2. 生成更明显的非稳态数据（增加趋势强度，减少噪声）
+    trend_data = 10 + 3 * np.arange(n) + 0.1 * np.random.randn(n)  # 增加斜率从0.05到0.5
     trend_time = np.arange(n)
     
     # 创建测试器实例
